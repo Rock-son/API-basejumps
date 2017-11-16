@@ -18,6 +18,7 @@ var express = require("express"),
 
     // SECURITY middleware (Helmet, Helmet-csp)
     app.use(helmet({dnsPrefetchControl: {allow: true}}));
+    /* just for example
     app.use(function(req, res, next) {
         res.set({
             "Access-Control-Allow-Origin" : "*",
@@ -25,7 +26,7 @@ var express = require("express"),
         });
         app.disable('x-powered-by');
         next();
-    });
+    });*/
     app.use(helmet_csp({
     directives: {
         defaultSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com/'],
