@@ -9,7 +9,7 @@ var express = require("express"),
     metadata = require("./file_metadata/metadata"),
     port = process.env.PORT || 3000,
     helmet = require("helmet"),
-    csp = require("helmet-csp"),
+    helmet_csp = require("helmet-csp"),
     morgan = require('morgan'),
     accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'}), // writable stream - for MORGAN logging
 
@@ -18,8 +18,15 @@ var express = require("express"),
 
     // SECURITY middleware (Helmet, Helmet-csp)
     app.use(helmet({dnsPrefetchControl: {allow: true}}));
-
-    app.use(csp({
+    app.use(function(req, res, next) {
+        res.set({
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Headers" : "Origin, X-Requested-With, content-type, Accept"
+        });
+        app.disable('x-powered-by');
+        next();
+    });
+    app.use(helmet_csp({
     directives: {
         defaultSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com/'],
         styleSrc: ["'self'", 'https://fonts.googleapis.com', 'https://fonts.gstatic.com/'],
