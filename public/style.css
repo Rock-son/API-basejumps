@@ -28,7 +28,7 @@ code span {
 }
 a, a:active, a:visited {
     text-decoration: none;
-    color: red;
+    color: #aaa;
 }
 a:hover {
     text-decoration: underline;
