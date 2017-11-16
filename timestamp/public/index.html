@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Free Code Camp - Timestamp Microservice</title>
+        <meta name="description" content="fcc project">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+        <style>
+        .container {
+            margin: 2% auto;
+            width: 60%;
+            min-height: 100%;
+            color: #333;
+            font-family: 'Roboto', Colibri, sans-serif;
+        }
+        code {
+            color: red;
+            background-color: #fff53f;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        ul {
+            margin-left: 2%;
+        }
+        li {
+            list-style-type: none;
+        }
+        h3 {
+            margin-left: 1%;
+        }
+        span {
+            font-weight: 700;
+        }
+        .break {
+            margin-left: 3%;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>API Basejump: Timestamp microservice</h1>
+
+                <h3>User stories:</h5>
+                <ul>
+                    <li><span>1.)</span> I can pass a string as a parameter, and it will check to see whether that string contains either a unix timestamp or a natural language date</li>
+                    <li><span class='break'></span> (example: January 1, 2016)</li>
+                    <li><span>2.)</span> If it does, it returns both the Unix timestamp and the natural language form of that date.</li>
+                    <li><span>3.)</span> If it does not contain a date or Unix timestamp, it returns null for those properties.</li>
+                </ul>
+            <h2>Example usage:</h2>
+            <code>https://timestamp-microservice-roky.herokuapp.com//December%2015,%202015</code></br>
+            <code>https://timestamp-microservice-roky.herokuapp.com//1450137600</code>
+
+            <h2>Example output:</h2>
+            <code>{ "unix": 1450137600, "natural": "December 15, 2015" }</code>
+        </div>
+    </body>
+</html>
