@@ -71,15 +71,10 @@ app.get("/*", function(req, res) {
         // Got the response from custom search
         console.log('Result: ' + resp.searchInformation.formattedTotalResults);
         if (resp.items && resp.items.length > 0) {
-            console.log(resp.items);
+            res.set({status: 200, "content-type": "application/json"});
+            res.send(formatData(jsonRes));
         }
-        });
-
-
-
-
-
-
+    });
     /* GET data from SEARCH
     https.request(post_obj, function(response) {
         response.setEncoding('utf8');
