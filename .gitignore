@@ -8,7 +8,6 @@ yarn-error.log*
 #secrets
 .env
 secrets.sh
-heroku_help.txt
 
 # Runtime data
 pids

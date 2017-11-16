@@ -64,18 +64,20 @@ app.get("/*", function(req, res) {
     });
 
     // set GOOGLEAPIS parameters and make a search request
-    customsearch.cse.list({ cx: API_ID, q: SEARCH, auth: API_KEY, num: 10, start: offset }, function (err, resp) {
+    customsearch.cse.list({ cx: API_ID, q: SEARCH, auth: API_KEY, num: "10", start: offset }, function (err, resp) {
         if (err) {
-            return console.log('An error occured', err);
-        }
-        // Got the response from custom search
-        console.log('Result: ' + resp.searchInformation.formattedTotalResults);
-        if (resp.items && resp.items.length > 0) {
             res.set({status: 200, "content-type": "application/json"});
-            res.send(formatData(jsonRes));
+            res.send(err);            
+        } else {
+            // Got the response from custom search
+            console.log('Result: ' + resp.searchInformation.formattedTotalResults);
+            if (resp.items && resp.items.length > 0) {
+                res.set({status: 200, "content-type": "application/json"});
+                res.send(formatData(resp.items));
+            }
         }
     });
-    /* GET data from SEARCH
+    /* GET data from SEARCH - SAME AS ABOVE!
     https.request(post_obj, function(response) {
         response.setEncoding('utf8');
         response.on("error", function(e) {console.error("There was a problem making a search request: " + e);})
@@ -91,13 +93,12 @@ app.get("/*", function(req, res) {
 
 function formatData(json) {
 
-    var resultJSON = JSON.parse(json),
+    var resultJSON = json,
         result = {};
 
     if (typeof resultJSON !== "object" || !resultJSON) {return {"error":"No search data was returned!"};}
-    if (!resultJSON.items) {return {"error": resultJSON};}
 
-    resultJSON.items.forEach(function(item, index) {
+    resultJSON.forEach(function(item, index) {
 
         var url = ((((item.pagemap || {})["cse_image"] || {})[0] || [])["src"] || "No url found") ||
                   ((((item.pagemap || {})["metatags"]  || {})[0] || [])["og:image"] || "No url found")

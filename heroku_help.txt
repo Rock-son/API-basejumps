@@ -1,0 +1,6 @@
+// initial git deployment for heroku
+
+heroku git:remote -a fcc-api-basejumps-roky
+
+
+!!!IMPORTANT - Google APIs don't usaually work well with cloud applications, so no restrictions can't be made on an API!
