@@ -77,7 +77,7 @@ function formatData(json) {
         result = {};
 
     if (typeof resultJSON !== "object" || !resultJSON) {return {"error":"No search data was returned!"};}
-    if (!resultJSON.items) {return {"error": resultJSON.error.errors.reason};}
+    if (!resultJSON.items) {return {"error": resultJSON};}
 
     resultJSON.items.forEach(function(item, index) {
 
