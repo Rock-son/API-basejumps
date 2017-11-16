@@ -42,7 +42,7 @@ app.get("/imagesearch", function(req, res) {
 app.get("/*", function(req, res) {
     
     var searchStr = req.params[0].split(/\s/).join("+"),
-        offset = req.query.offset,
+        offset = req.query.offset || 0,
         template = "https://www.googleapis.com/customsearch/v1?q=" + searchStr + "&cx=" + encodeURIComponent(api_id) + "&start=" + offset + "&num=10&key=" + api_key,        
         jsonRes = "";
 
@@ -77,7 +77,7 @@ function formatData(json) {
         result = {};
 
     if (typeof resultJSON !== "object" || !resultJSON) {return {"error":"No search data was returned!"};}
-    if (!resultJSON.items) {return {"error": "No search items were returned by the search!"};}
+    if (!resultJSON.items) {return {"error": resultJSON.error.errors.reason};}
 
     resultJSON.items.forEach(function(item, index) {
 
