@@ -10,16 +10,16 @@ var express = require("express"),
     dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + process.env.DBLINK,
     collection = "img_search",
 
-    imgSearch = express.Router();
+    app = express.Router();
     
-imgSearch.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 
-imgSearch.get('/favicon.ico', function(req, res) {
+app.get('/favicon.ico', function(req, res) {
     res.status(204);
 });
 
-imgSearch.get("/imagesearch", function(req, res) {
+app.get("/imagesearch", function(req, res) {
    
     MongoClient.connect(dbUrl, function(err, db) {
         if (err) throw err;
@@ -39,7 +39,7 @@ imgSearch.get("/imagesearch", function(req, res) {
     }); 
 });
 
-imgSearch.get("/*", function(req, res) {
+app.get("/*", function(req, res) {
     
     var searchStr = req.params[0].split(/\s/).join("+"),
         offset = req.query.offset,
@@ -99,4 +99,4 @@ function formatData(json) {
     return result;
 }
 
-module.exports = imgSearch;
+module.exports = app;

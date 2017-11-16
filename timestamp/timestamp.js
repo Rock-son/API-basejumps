@@ -1,11 +1,11 @@
 var express = require("express"),
     path = require("path"),
     
-    timestamp = express.Router();
+    app = express.Router();
 
-    timestamp.use(express.static(path.join(__dirname, "public/")));
+    app.use(express.static(path.join(__dirname, "public/")));
 
-timestamp.get("/*", function(req, res) {
+app.get("/*", function(req, res) {
 
     var formattedString = (req.url.slice(1).replace(/\%20/g, "")),
         options = {year: 'numeric', month: 'long', day: 'numeric'};
@@ -21,4 +21,4 @@ timestamp.get("/*", function(req, res) {
     }  
 });
 
-module.exports = timestamp;
+module.exports = app;

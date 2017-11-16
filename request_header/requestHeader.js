@@ -1,9 +1,9 @@
 var express = require("express"),
     path = require("path"),
     
-    requestHeader = express.Router();
+    app = express.Router();
 
-requestHeader.get("/", function(req, res) {
+app.get("/", function(req, res) {
     
     var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
         language = /^.*?(\,)/.exec(req.headers["accept-language"])[0].replace(/\,/, ""),
@@ -13,4 +13,4 @@ requestHeader.get("/", function(req, res) {
     res.send(JSON.stringify({ip: ip, language: language, software: os}));    
 });
 
-module.exports = requestHeader;
+module.exports = app;
