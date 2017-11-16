@@ -5,37 +5,8 @@
         <title>Free Code Camp - Timestamp Microservice</title>
         <meta name="description" content="fcc project">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
-        <style>
-        .container {
-            margin: 2% auto;
-            width: 60%;
-            min-height: 100%;
-            color: #333;
-            font-family: 'Roboto', Colibri, sans-serif;
-        }
-        code {
-            color: red;
-            background-color: #fff53f;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-        ul {
-            margin-left: 2%;
-        }
-        li {
-            list-style-type: none;
-        }
-        h3 {
-            margin-left: 1%;
-        }
-        span {
-            font-weight: 700;
-        }
-        .break {
-            margin-left: 3%;
-        }
-        </style>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="./style.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
@@ -49,8 +20,8 @@
                     <li><span>3.)</span> If it does not contain a date or Unix timestamp, it returns null for those properties.</li>
                 </ul>
             <h2>Example usage:</h2>
-            <code>https://timestamp-microservice-roky.herokuapp.com//December%2015,%202015</code></br>
-            <code>https://timestamp-microservice-roky.herokuapp.com//1450137600</code>
+            <code>https://fcc-api-basejumps-roky.herokuapp.com/timestamp/December%2015,%202015</code></br>
+            <code>https://fcc-api-basejumps-roky.herokuapp.com/timestamp/1450137600</code>
 
             <h2>Example output:</h2>
             <code>{ "unix": 1450137600, "natural": "December 15, 2015" }</code>

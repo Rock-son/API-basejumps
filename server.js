@@ -4,6 +4,7 @@ var express = require("express"),
     metadata = require("./file_metadata/metadata"),
     imageSearch = require("./image_search/imageSearch"),
     requestHeader = require("./request_header/requestHeader"),
+    timestamp = require("./timestamp/timestamp"),
     port = process.env.PORT || 3000,
     app = express();
 
@@ -13,5 +14,6 @@ var express = require("express"),
     app.use("/metadata", metadata);
     app.use("/image-search", imageSearch);
     app.use("/request-header", requestHeader);
+    app.use("/timestamp", timestamp);
 
     app.listen(port, () => console.log("Listening on port " + port))
