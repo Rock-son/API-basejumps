@@ -43,7 +43,7 @@ app.get("/imagesearch", function(req, res) {
 });
 
 app.get("/*", function(req, res) {
-console.log(req.headers);
+    
     var SEARCH = req.params[0].split(/\s/).join("+"),
         offset = req.query.offset || 1,
         //template = "https://www.googleapis.com/customsearch/v1?q=" + SEARCH + "&cx=" + encodeURIComponent(API_ID) + "&start=" + NUM + "&num=10&key=" + API_KEY,
