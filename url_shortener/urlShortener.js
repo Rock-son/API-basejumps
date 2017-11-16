@@ -1,12 +1,11 @@
 var express = require("express"),
     MongoClient = require("mongodb").MongoClient,
-    path = require("path"),
-    port = process.env.PORT || 3000,    
-    dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS +"@ds245715.mlab.com:45715/fcc_projects",
+    path = require("path"), 
+    dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + process.env.DBLINK,
     collection = "url_shortener",
     maxId = 1,
 
-    app = express();
+    app = express.Router();
 
 // middleware
 app.use(express.static(path.join(__dirname, "/public")));  //app.use(require('stylus').middleware(path.join(__dirname + '/public')))
@@ -28,10 +27,10 @@ app.get('/new/*', function(req, res) {
             ).toArray(function(error, documents) {
                 if (error) throw error;
                 if (documents.length) {
-                    res.writeHead(200, { 'content-type': 'text/html' });
-                    res.end(JSON.stringify({"original_url": documents[0].url,
-                                            "short_url":"<a target='_blank' href='https://url-shortener-microservice-rok.herokuapp.com/" + documents[0].url_nr + "'>" + 
-                                                "https://url-shortener-microservice-rok.herokuapp.com/" + documents[0].url_nr +"</a>"}));
+                    res.set({status: 200, 'content-type': 'text/html' });
+                    res.send(JSON.stringify({"original_url": documents[0].url,
+                                            "short_url":"<a target='_blank' href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + documents[0].url_nr + "'>" + 
+                                                "https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + documents[0].url_nr +"</a>"}));
                     db.close();
                 } else {
                 //OR INSERT if not found
@@ -45,8 +44,8 @@ app.get('/new/*', function(req, res) {
             });
         });   
     } else {
-        res.writeHead(200, { 'content-type': 'text/plain' });
-        res.end(JSON.stringify({"error":"Wrong url format, make sure you have a valid protocol and real site."}));
+        res.set({status: 200, 'content-type': 'application/json' });
+        res.send(JSON.stringify({"error":"Wrong url format, make sure you have a valid protocol and real site."}));
     }
 });
 
@@ -70,25 +69,17 @@ app.get('/:id', function(req, res) {
                         res.redirect(documents[0].url);
                         db.close();
                     } else {
-                        res.writeHead(200, { 'content-type': 'text/plain' });
+                        res.set({status: 200, 'content-type': 'application/json' });
                         res.end(JSON.stringify({"error":"This url is not in the database."}));
                         db.close();
                     }
                 });        
         });
     } else {
-        res.writeHead(200, { 'content-type': 'text/plain' });
-        res.end(JSON.stringify({"error":"You need to pass a number to the url OR wrong path! Index deleted!"}));
+        res.set({status: 200, 'content-type': 'application/json' });
+        res.send(JSON.stringify({"error":"You need to pass a number to the url OR wrong path! Index deleted!"}));
     }
 });
-
-
-
-app.listen(port);
-
-
-
-
 
 function insertDB(db, collection, maxUrlNr, url, res) {
 
@@ -99,10 +90,12 @@ function insertDB(db, collection, maxUrlNr, url, res) {
         time: new Date()
     }, function(error, data) {
         if (error) throw error;
-        res.writeHead(200, { 'content-type': 'text/html' });
-        res.end(JSON.stringify({"original_url": url,
-                                "short_url":"<a target='_blank' href='https://url-shortener-microservice-rok.herokuapp.com/" + maxUrlNr + "'>" + 
-                                        "https://url-shortener-microservice-rok.herokuapp.com/" + maxUrlNr +"</a>"}));
+        res.set({status: 200, 'content-type': 'text/html' });
+        res.send(JSON.stringify({"original_url": url,
+                                "short_url":"<a target='_blank' href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + maxUrlNr + "'>" + 
+                                        "https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + maxUrlNr +"</a>"}));
     });
     db.close();
 }
+
+module.exports = app;

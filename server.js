@@ -5,6 +5,7 @@ var express = require("express"),
     imageSearch = require("./image_search/imageSearch"),
     requestHeader = require("./request_header/requestHeader"),
     timestamp = require("./timestamp/timestamp"),
+    urlShortener = require("./url_shortener/urlShortener"),
     port = process.env.PORT || 3000,
     app = express();
 
@@ -15,5 +16,6 @@ var express = require("express"),
     app.use("/image-search", imageSearch);
     app.use("/request-header", requestHeader);
     app.use("/timestamp", timestamp);
+    app.use("/url-shortener", urlShortener);
 
     app.listen(port, () => console.log("Listening on port " + port))
