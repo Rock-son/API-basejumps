@@ -1,19 +1,20 @@
 'use strict'
 
-var express = require("express"),
-    https = require("https"),
-    path = require("path"),
-    url = require("url"),
-    querystring = require("querystring"),
-    MongoClient = require("mongodb").MongoClient,
-    port = process.env.PORT || 3000,
-    api_id = process.env.API_ID,
-    api_key = process.env.API_KEY,
-    dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + process.env.DBLINK,
-    collection = "img_search",
+const express = require("express"),
+      https = require("https"),
+      path = require("path"),
+      google = require("googleapis"),
+      customsearch = google.customsearch('v1'),
+      MongoClient = require("mongodb").MongoClient,
+      port = process.env.PORT || 3000,
+      API_ID = process.env.API_ID,
+      API_KEY = process.env.API_KEY,
+      dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + process.env.DBLINK,
+      collection = "img_search",
 
-    app = express.Router();
-    
+      app = express.Router();
+
+
 app.use(express.static(path.join(__dirname, "public")));
 
 
@@ -43,10 +44,11 @@ app.get("/imagesearch", function(req, res) {
 
 app.get("/*", function(req, res) {
 
-    var searchStr = req.params[0].split(/\s/).join("+"),
+    var SEARCH = req.params[0].split(/\s/).join("+"),
         offset = req.query.offset || 0,
-        template = "https://www.googleapis.com/customsearch/v1?q=" + searchStr + "&cx=" + encodeURIComponent(api_id) + "&start=" + offset + "&num=10&key=" + api_key,        
+        //template = "https://www.googleapis.com/customsearch/v1?q=" + SEARCH + "&cx=" + encodeURIComponent(API_ID) + "&start=" + NUM + "&num=10&key=" + API_KEY,
         jsonRes = "";
+
 
     // INSERT new search into database
     MongoClient.connect(dbUrl, function(err, db) {
@@ -54,20 +56,31 @@ app.get("/*", function(req, res) {
         var time = new Date();
         db.collection(collection).insert(
             {
-                term: searchStr.split(/\+/).join(" "),
+                term: SEARCH.split(/\+/).join(" "),
                 "search-time": new Date()
             }
         );
         db.close();            
     });
-    var post_obj = {
-            host: "googleapis.com",            
-            method: "GET",
-            path: "/customsearch/v1?q=" + searchStr + "&cx=" + encodeURIComponent(api_id) + "&start=" + offset + "&num=10&key=" + api_key,
-            headers: req.headers
-    };
-    
-    // GET data from SEARCH
+
+    // set GOOGLEAPIS parameters and make a search request
+    customsearch.cse.list({ cx: API_ID, q: SEARCH, auth: API_KEY, num: 10, start: offset }, function (err, resp) {
+        if (err) {
+            return console.log('An error occured', err);
+        }
+        // Got the response from custom search
+        console.log('Result: ' + resp.searchInformation.formattedTotalResults);
+        if (resp.items && resp.items.length > 0) {
+            console.log(resp.items);
+        }
+        });
+
+
+
+
+
+
+    /* GET data from SEARCH
     https.request(post_obj, function(response) {
         response.setEncoding('utf8');
         response.on("error", function(e) {console.error("There was a problem making a search request: " + e);})
@@ -76,7 +89,7 @@ app.get("/*", function(req, res) {
             res.set({status: 200, "content-type": "application/json"});
             res.send(formatData(jsonRes));
             });
-    });
+});*/
     
 });
 
