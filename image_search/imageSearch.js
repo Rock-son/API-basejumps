@@ -3,6 +3,8 @@
 var express = require("express"),
     https = require("https"),
     path = require("path"),
+    url = require("url"),
+    querystring = require("querystring"),
     MongoClient = require("mongodb").MongoClient,
     port = process.env.PORT || 3000,
     api_id = process.env.API_ID,
@@ -40,7 +42,7 @@ app.get("/imagesearch", function(req, res) {
 });
 
 app.get("/*", function(req, res) {
-    
+
     var searchStr = req.params[0].split(/\s/).join("+"),
         offset = req.query.offset || 0,
         template = "https://www.googleapis.com/customsearch/v1?q=" + searchStr + "&cx=" + encodeURIComponent(api_id) + "&start=" + offset + "&num=10&key=" + api_key,        
@@ -52,22 +54,30 @@ app.get("/*", function(req, res) {
         var time = new Date();
         db.collection(collection).insert(
             {
-                term: req.params[0].split(/\s/).join(" "),
+                term: searchStr.split(/\+/).join(" "),
                 "search-time": new Date()
             }
         );
         db.close();            
     });
-    // GET data from SEARCH
-    https.get(template, function(response) {
+    var post_obj = {
+            host: "googleapis.com",            
+            method: "GET",
+            path: "/customsearch/v1?q=" + searchStr + "&cx=" + encodeURIComponent(api_id) + "&start=" + offset + "&num=10&key=" + api_key,
+            headers: req.headers
+    };
     
+    // GET data from SEARCH
+    https.request(post_obj, function(response) {
+        response.setEncoding('utf8');
         response.on("error", function(e) {console.error("There was a problem making a search request: " + e);})
         response.on("data", function(d) {jsonRes += d;})
         response.on("end", function() {            
-            res.set({status: 200, "content-type": "application/json" });
+            res.set({status: 200, "content-type": "application/json"});
             res.send(formatData(jsonRes));
             });
     });
+    
 });
 
 
