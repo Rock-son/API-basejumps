@@ -77,7 +77,7 @@ app.get('/:id', function(req, res) {
         });
     } else {
         res.set({status: 200, 'content-type': 'application/json' });
-        res.send(JSON.stringify({"error":"You need to pass a number to the url OR wrong path! Index deleted!"}));
+        res.send(JSON.stringify({"error":"Wrong path!"}));
     }
 });
 
