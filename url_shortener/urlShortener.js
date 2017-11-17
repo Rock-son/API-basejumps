@@ -29,7 +29,7 @@ app.get('/new/*', function(req, res) {
                 if (documents.length) {
                     res.set({status: 200, 'content-type': 'text/html' });
                     res.send(JSON.stringify({"original_url": documents[0].url,
-                                            "short_url":"<a target='_blank' href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + documents[0].url_nr + "'>" + 
+                                            "short_url":"<a href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + documents[0].url_nr + "'>" + 
                                                 "https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + documents[0].url_nr +"</a>"}));
                     db.close();
                 } else {
@@ -92,7 +92,7 @@ function insertDB(db, collection, maxUrlNr, url, res) {
         if (error) throw error;
         res.set({status: 200, 'content-type': 'text/html' });
         res.send(JSON.stringify({"original_url": url,
-                                "short_url":"<a target='_blank' href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + maxUrlNr + "'>" + 
+                                "short_url":"<a href='https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + maxUrlNr + "'>" + 
                                         "https://fcc-api-basejumps-roky.herokuapp.com/url-shortener/" + maxUrlNr +"</a>"}));
     });
     db.close();
