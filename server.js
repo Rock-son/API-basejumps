@@ -1,4 +1,10 @@
 'use strict'
+// if development
+if (process.env.HEROKU_RUN == null) {
+	// eslint-disable-next-line global-require
+	require("dotenv").config();
+}
+
 var express = require("express"),
     path = require("path"),
     fs = require("fs"),

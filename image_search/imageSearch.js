@@ -9,7 +9,7 @@ const express = require("express"),
       port = process.env.PORT || 3000,
       API_ID = process.env.API_ID,
       API_KEY = process.env.API_KEY,
-      dbUrl = "mongodb://" + process.env.DBUSER + ":" + process.env.DBPASS + process.env.DBLINK,
+      dbUrl = process.env.DBLINK,
       collection = "img_search",
 
       app = express.Router();
@@ -22,34 +22,38 @@ app.get('/favicon.ico', function(req, res) {
     res.status(204);
 });
 
-app.get("/imagesearch", function(req, res) {
-   
-    MongoClient.connect(dbUrl, function(err, db) {
-        if (err) throw err;
-        db.collection(collection).find({}, {_id: 0, term: 1, "search-time": 1}).sort({_id: -1}).limit(10)
-            .toArray(function(error, documents) {
-                if (error) throw error;
-                if (documents.length) {
-                    res.set({status: 200, 'content-type': 'application/json' });
-                    res.send(JSON.stringify(documents));
-                    db.close();
-                } else {
-                    res.set({status: 200, 'content-type': 'application/json' });
-                    res.send(JSON.stringify({"info": "No data in Database yet!"}));
-                    db.close();
-                }
-        });
-    }); 
-});
+app.get("/imagesearch", async function(req, res) {
+    
+    const client = new MongoClient(dbUrl);
+    await client.connect()
 
-app.get("/*", function(req, res) {
+    const db = client.db("");
+    db.collection(collection).find({}, {_id: 0, term: 1, "search-time": 1}).sort({_id: -1}).limit(10)
+        .toArray(function(error, documents) {
+            if (error) throw error;
+            if (documents.length) {
+                res.set({status: 200, 'content-type': 'application/json' });
+                res.send(JSON.stringify(documents));
+                client.close();
+            } else {
+                res.set({status: 200, 'content-type': 'application/json' });
+                res.send(JSON.stringify({"info": "No data in Database yet!"}));
+                client.close();
+            }
+        });
+    });
+
+app.get("/*", async function(req, res) {
     
     var SEARCH = req.params[0].split(/\s/).join("+"),
         offset = req.query.offset || 1,
         //template = "https://www.googleapis.com/customsearch/v1?q=" + SEARCH + "&cx=" + encodeURIComponent(API_ID) + "&start=" + NUM + "&num=10&key=" + API_KEY,
         jsonRes = "";
 
+    const client = new MongoClient(dbUrl);
+    await client.connect()
 
+    const db = client.db("");
     // INSERT new search into database
     MongoClient.connect(dbUrl, function(err, db) {
         if (err) throw err;
@@ -60,7 +64,7 @@ app.get("/*", function(req, res) {
                 "search-time": new Date()
             }
         );
-        db.close();            
+        client.close();            
     });
 
     // set GOOGLEAPIS parameters and make a search request
