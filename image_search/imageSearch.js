@@ -55,17 +55,13 @@ app.get("/*", async function(req, res) {
 
     const db = client.db("freeCodeCamp");
     // INSERT new search into database
-    MongoClient.connect(dbUrl, function(err, db) {
-        if (err) throw err;
-        var time = new Date();
-        db.collection(collection).insert(
-            {
-                term: SEARCH.split(/\+/).join(" "),
-                "search-time": new Date()
-            }
-        );
-        client.close();            
-    });
+    db.collection(collection).insert(
+        {
+            term: SEARCH.split(/\+/).join(" "),
+            "search-time": new Date()
+        }
+    );
+    client.close();
 
     // set GOOGLEAPIS parameters and make a search request
     customsearch.cse.list({ cx: API_ID, q: SEARCH, auth: API_KEY, num: "10", start: offset }, function (err, resp) {
