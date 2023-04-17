@@ -27,7 +27,7 @@ app.get("/imagesearch", async function(req, res) {
     const client = new MongoClient(dbUrl);
     await client.connect()
 
-    const db = client.db("");
+    const db = client.db("freeCodeCamp");
     db.collection(collection).find({}, {_id: 0, term: 1, "search-time": 1}).sort({_id: -1}).limit(10)
         .toArray(function(error, documents) {
             if (error) throw error;
@@ -53,7 +53,7 @@ app.get("/*", async function(req, res) {
     const client = new MongoClient(dbUrl);
     await client.connect()
 
-    const db = client.db("");
+    const db = client.db("freeCodeCamp");
     // INSERT new search into database
     MongoClient.connect(dbUrl, function(err, db) {
         if (err) throw err;
